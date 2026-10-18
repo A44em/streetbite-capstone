@@ -1,3 +1,53 @@
-import 'package:flutter/material.dart';import 'package:flutter_bloc/flutter_bloc.dart';import '../../domain/entities/meal.dart';import '../../l10n/app_localizations.dart';import '../blocs/cart_bloc.dart';import '../../core/services/firestore_service.dart';
-class MealDetailsScreen extends StatelessWidget {const MealDetailsScreen({required this.meal,super.key});final Meal meal;
-@override Widget build(BuildContext context){final l=AppLocalizations.of(context)!;return Scaffold(appBar:AppBar(title:Text(l.details),actions:[IconButton(tooltip:l.saveFavourite,onPressed:() async {try{await FirestoreService.instance.toggleFavourite(meal);if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(l.favourites)));}catch(_){if(context.mounted)ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(l.error)));}},icon:const Icon(Icons.favorite_border))]),body:ListView(padding:const EdgeInsets.all(16),children:[Image.network(meal.image,height:230,fit:BoxFit.cover),const SizedBox(height:16),Text(meal.name,style:Theme.of(context).textTheme.headlineSmall),Text('${l.category}: ${meal.category}'),Text('${l.origin}: ${meal.area}'),const SizedBox(height:20),Text(l.instructions,style:Theme.of(context).textTheme.titleLarge),Text(meal.instructions),const SizedBox(height:20),FilledButton(onPressed:(){context.read<CartBloc>().add(CartItemAdded(meal));ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text(l.addToCart)));},child:Text(l.addToCart))]));}}
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/entities/meal.dart';
+import '../../l10n/app_localizations.dart';
+import '../blocs/cart_bloc.dart';
+import '../../core/services/firestore_service.dart';
+
+class MealDetailsScreen extends StatelessWidget {
+  const MealDetailsScreen({required this.meal, super.key});
+  final Meal meal;
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
+    return Scaffold(
+        appBar: AppBar(title: Text(l.details), actions: [
+          IconButton(
+              tooltip: l.saveFavourite,
+              onPressed: () async {
+                try {
+                  await FirestoreService.instance.toggleFavourite(meal);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(l.favourites)));
+                  }
+                } catch (_) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(SnackBar(content: Text(l.error)));
+                  }
+                }
+              },
+              icon: const Icon(Icons.favorite_border))
+        ]),
+        body: ListView(padding: const EdgeInsets.all(16), children: [
+          Image.network(meal.image, height: 230, fit: BoxFit.cover),
+          const SizedBox(height: 16),
+          Text(meal.name, style: Theme.of(context).textTheme.headlineSmall),
+          Text('${l.category}: ${meal.category}'),
+          Text('${l.origin}: ${meal.area}'),
+          const SizedBox(height: 20),
+          Text(l.instructions, style: Theme.of(context).textTheme.titleLarge),
+          Text(meal.instructions),
+          const SizedBox(height: 20),
+          FilledButton(
+              onPressed: () {
+                context.read<CartBloc>().add(CartItemAdded(meal));
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(l.addToCart)));
+              },
+              child: Text(l.addToCart))
+        ]));
+  }
+}

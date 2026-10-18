@@ -1,0 +1,2 @@
+# Copy private values into android/local.properties; never commit that file.
+MAPS_API_KEY=your_restricted_android_maps_api_key

@@ -3,7 +3,14 @@ import 'package:streetbite/domain/entities/meal.dart';
 import 'package:streetbite/presentation/blocs/cart_bloc.dart';
 
 void main() {
-  const meal = Meal(id: '1', name: 'Meal', image: '', category: 'Test', area: 'Test', instructions: '', price: 75);
+  const meal = Meal(
+      id: '1',
+      name: 'Meal',
+      image: '',
+      category: 'Test',
+      area: 'Test',
+      instructions: '',
+      price: 75);
   test('Cart events update items and total', () async {
     final cart = CartBloc();
     cart.add(CartItemAdded(meal));

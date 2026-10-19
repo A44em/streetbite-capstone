@@ -1,0 +1,22 @@
+workflows:
+  android-validation:
+    name: StreetBite Android validation
+    max_build_duration: 60
+    environment:
+      flutter: stable
+    scripts:
+      - name: Resolve dependencies
+        script: flutter pub get
+      - name: Generate localization
+        script: flutter gen-l10n
+      - name: Verify formatting
+        script: dart format --output=none --set-exit-if-changed .
+      - name: Static analysis
+        script: flutter analyze
+      - name: Unit tests
+        script: flutter test --machine > build/test-results.json
+      - name: Debug APK
+        script: flutter build apk --debug
+    artifacts:
+      - build/app/outputs/flutter-apk/app-debug.apk
+      - build/test-results.json

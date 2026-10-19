@@ -22,7 +22,7 @@ dependencies:
   google_maps_flutter: ^2.9.0
   image_picker: ^1.1.2
   local_auth: ^2.3.0
-  device_info_plus: ^11.1.0
+  device_info_plus: ^13.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -58,6 +58,11 @@ MAPS_API_KEY=your_restricted_android_maps_api_key
 `android/local.properties.example` documents the expected property without
 containing a real credential.
 
+Production signing uses an ignored `android/key.properties` file. The expected
+fields are documented in `android/key.properties.example`. Without that file,
+release-mode builds use the Android debug key for diagnostics only and are not
+eligible for production distribution.
+
 ## Development
 
 ```bash
@@ -69,10 +74,24 @@ flutter test
 flutter build apk --debug
 ```
 
+## Quality Engineering
+
+- `test/` contains Flutter unit tests for meals, cart behavior, the user Builder,
+  and preference persistence.
+- `qa/manual/` contains the manual test plan, canonical cases, execution record,
+  traceability, defect-import CSV, and closure report.
+- `qa/appium/` is an independent Java/Maven Appium 2 project using UiAutomator2,
+  page objects, explicit waits, and failure screenshots.
+- `docs/` records requirements coverage, gaps, verification, release blockers,
+  and the final submission checklist.
+- `evidence/` defines the required genuine screenshot and distribution artifacts.
+
+Public repository: https://github.com/A44em/streetbite-capstone
+
 ## Verification Status
 
 - Static analysis: no issues
-- Automated tests: 2 passing
+- Automated tests: 6 passing
 - Android debug build: successful
 - Emulator installation: pending due to insufficient storage and emulator
   responsiveness in the latest verification environment

@@ -48,6 +48,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
       await ref.putData(await picked.readAsBytes(),
           SettableMetadata(contentType: 'image/jpeg'));
       await FirestoreService.instance.savePhotoUrl(await ref.getDownloadURL());
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text(AppLocalizations.of(context)!.photoUpdated),
+        ));
+      }
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

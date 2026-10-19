@@ -111,12 +111,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get card => 'Card (demo)';
 
   @override
-  String get choosePayment => 'Payment method';
-
-  @override
-  String get vendors => 'Nearby Vendors';
-
-  @override
   String get biometricUnavailable => 'Biometrics unavailable on this device';
 
   @override
@@ -144,12 +138,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get saveFavourite => 'Save favourite';
 
   @override
-  String get removeFavourite => 'Remove favourite';
-
-  @override
-  String get signInRequired => 'Sign in to continue';
-
-  @override
   String get openProfile => 'Open profile';
 
   @override
@@ -168,16 +156,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get getStarted => 'Get started';
 
   @override
-  String get skip => 'Skip';
-
-  @override
-  String get featured => 'Featured meals';
-
-  @override
   String get mealUnavailable => 'No meals available';
-
-  @override
-  String get tryAgain => 'Please try again';
 
   @override
   String get authInvalid => 'Invalid email or password';
@@ -201,11 +180,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get createYourAccount => 'Create your account';
 
   @override
-  String get continueLabel => 'Continue';
-
-  @override
   String get priceUnit => 'EGP';
-
-  @override
-  String get offlineNotice => 'Showing saved meals';
 }

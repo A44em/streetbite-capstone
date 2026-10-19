@@ -61,9 +61,13 @@ class _OnboardingScreenState extends State<OnboardingScreen>
                                   const SizedBox(height: 36),
                                   SizedBox(
                                       width: double.infinity,
-                                      child: FilledButton(
-                                          onPressed: continueToAuth,
-                                          child: Text(l.getStarted))),
+                                      child: Semantics(
+                                        identifier: 'onboarding_continue',
+                                        button: true,
+                                        child: FilledButton(
+                                            onPressed: continueToAuth,
+                                            child: Text(l.getStarted)),
+                                      )),
                                 ])))))));
   }
 }

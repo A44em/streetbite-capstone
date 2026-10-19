@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="StreetBite Android" parallel="false">
+  <test name="Authentication and home scenarios">
+    <classes>
+      <class name="com.a44em.streetbite.tests.AuthenticationTest" />
+      <class name="com.a44em.streetbite.tests.HomeTest" />
+    </classes>
+  </test>
+</suite>

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth_cubit.dart';
 import '../../core/services/firestore_service.dart';
+import '../../data/models/user_model.dart';
 import '../../l10n/app_localizations.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -43,9 +44,13 @@ class _AuthScreenState extends State<AuthScreen> {
         if (user == null) {
           throw StateError('Firebase did not return the registered user.');
         }
-        await user.updateDisplayName(name.text.trim());
-        await FirestoreService.instance
-            .saveProfile(name: name.text.trim(), email: email.text.trim());
+        final profile = UserModel.builder()
+            .withId(user.uid)
+            .withName(name.text)
+            .withEmail(email.text)
+            .build();
+        await user.updateDisplayName(profile.name);
+        await FirestoreService.instance.saveProfile(profile);
       } else {
         await context
             .read<AuthCubit>()
@@ -98,38 +103,47 @@ class _AuthScreenState extends State<AuthScreen> {
                                       .headlineMedium),
                               const SizedBox(height: 24),
                               if (register)
-                                TextFormField(
-                                    key: const Key('signup_name'),
-                                    controller: name,
+                                Semantics(
+                                  identifier: 'signup_name_field',
+                                  child: TextFormField(
+                                      key: const Key('signup_name'),
+                                      controller: name,
+                                      decoration: InputDecoration(
+                                          labelText: l.fullName),
+                                      validator: (v) {
+                                        final s = v?.trim() ?? '';
+                                        return s.isEmpty ||
+                                                !RegExp(r'^[A-Z]').hasMatch(s)
+                                            ? l.nameRequired
+                                            : null;
+                                      }),
+                                ),
+                              Semantics(
+                                identifier: 'login_email_field',
+                                child: TextFormField(
+                                    key: const Key('login_email'),
+                                    controller: email,
                                     decoration:
-                                        InputDecoration(labelText: l.fullName),
-                                    validator: (v) {
-                                      final s = v?.trim() ?? '';
-                                      return s.isEmpty ||
-                                              !RegExp(r'^[A-Z]').hasMatch(s)
-                                          ? l.nameRequired
-                                          : null;
-                                    }),
-                              TextFormField(
-                                  key: const Key('login_email'),
-                                  controller: email,
-                                  decoration:
-                                      InputDecoration(labelText: l.email),
-                                  keyboardType: TextInputType.emailAddress,
-                                  validator: (v) =>
-                                      !RegExp(r'^[^@ ]+@[^@ ]+\.[^@ ]+$')
-                                              .hasMatch(v?.trim() ?? '')
-                                          ? l.invalidInput
-                                          : null),
-                              TextFormField(
-                                  key: const Key('login_password'),
-                                  controller: password,
-                                  decoration:
-                                      InputDecoration(labelText: l.password),
-                                  obscureText: true,
-                                  validator: (v) => (v?.length ?? 0) < 6
-                                      ? l.passwordShort
-                                      : null),
+                                        InputDecoration(labelText: l.email),
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: (v) =>
+                                        !RegExp(r'^[^@ ]+@[^@ ]+\.[^@ ]+$')
+                                                .hasMatch(v?.trim() ?? '')
+                                            ? l.invalidInput
+                                            : null),
+                              ),
+                              Semantics(
+                                identifier: 'login_password_field',
+                                child: TextFormField(
+                                    key: const Key('login_password'),
+                                    controller: password,
+                                    decoration:
+                                        InputDecoration(labelText: l.password),
+                                    obscureText: true,
+                                    validator: (v) => (v?.length ?? 0) < 6
+                                        ? l.passwordShort
+                                        : null),
+                              ),
                               if (register)
                                 TextFormField(
                                     key: const Key('signup_confirm'),
@@ -149,24 +163,33 @@ class _AuthScreenState extends State<AuthScreen> {
                                                 .colorScheme
                                                 .error))),
                               const SizedBox(height: 20),
-                              FilledButton(
-                                  key: const Key('auth_submit'),
-                                  onPressed: busy ? null : submit,
-                                  child: busy
-                                      ? const SizedBox(
-                                          height: 20,
-                                          width: 20,
-                                          child: CircularProgressIndicator(
-                                              strokeWidth: 2))
-                                      : Text(register ? l.signUp : l.signIn)),
-                              TextButton(
-                                  onPressed: busy
-                                      ? null
-                                      : () => setState(() {
-                                            register = !register;
-                                            error = null;
-                                          }),
-                                  child: Text(register ? l.signIn : l.signUp)),
+                              Semantics(
+                                identifier: 'auth_submit_button',
+                                button: true,
+                                child: FilledButton(
+                                    key: const Key('auth_submit'),
+                                    onPressed: busy ? null : submit,
+                                    child: busy
+                                        ? const SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                                strokeWidth: 2))
+                                        : Text(register ? l.signUp : l.signIn)),
+                              ),
+                              Semantics(
+                                identifier: 'auth_mode_toggle',
+                                button: true,
+                                child: TextButton(
+                                    onPressed: busy
+                                        ? null
+                                        : () => setState(() {
+                                              register = !register;
+                                              error = null;
+                                            }),
+                                    child:
+                                        Text(register ? l.signIn : l.signUp)),
+                              ),
                             ]))))));
   }
 }

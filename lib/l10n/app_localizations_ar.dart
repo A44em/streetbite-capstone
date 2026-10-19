@@ -111,12 +111,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get card => 'بطاقة (تجريبي)';
 
   @override
-  String get choosePayment => 'طريقة الدفع';
-
-  @override
-  String get vendors => 'البائعون القريبون';
-
-  @override
   String get biometricUnavailable => 'البصمة غير متاحة على هذا الجهاز';
 
   @override
@@ -144,12 +138,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get saveFavourite => 'إضافة للمفضلة';
 
   @override
-  String get removeFavourite => 'إزالة من المفضلة';
-
-  @override
-  String get signInRequired => 'سجل الدخول للمتابعة';
-
-  @override
   String get openProfile => 'فتح الملف الشخصي';
 
   @override
@@ -168,16 +156,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get getStarted => 'ابدأ الآن';
 
   @override
-  String get skip => 'تخطي';
-
-  @override
-  String get featured => 'وجبات مميزة';
-
-  @override
   String get mealUnavailable => 'لا توجد وجبات متاحة';
-
-  @override
-  String get tryAgain => 'حاول مرة أخرى';
 
   @override
   String get authInvalid => 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
@@ -201,11 +180,5 @@ class AppLocalizationsAr extends AppLocalizations {
   String get createYourAccount => 'أنشئ حسابك';
 
   @override
-  String get continueLabel => 'متابعة';
-
-  @override
   String get priceUnit => 'جنيه';
-
-  @override
-  String get offlineNotice => 'يتم عرض الوجبات المحفوظة';
 }

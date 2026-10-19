@@ -1,0 +1,4 @@
+storePassword=replace_with_secure_value
+keyPassword=replace_with_secure_value
+keyAlias=streetbite
+storeFile=/absolute/path/to/private/streetbite-upload-keystore.jks

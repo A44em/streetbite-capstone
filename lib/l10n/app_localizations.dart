@@ -302,18 +302,6 @@ abstract class AppLocalizations {
   /// **'Card (demo)'**
   String get card;
 
-  /// No description provided for @choosePayment.
-  ///
-  /// In en, this message translates to:
-  /// **'Payment method'**
-  String get choosePayment;
-
-  /// No description provided for @vendors.
-  ///
-  /// In en, this message translates to:
-  /// **'Nearby Vendors'**
-  String get vendors;
-
   /// No description provided for @biometricUnavailable.
   ///
   /// In en, this message translates to:
@@ -368,18 +356,6 @@ abstract class AppLocalizations {
   /// **'Save favourite'**
   String get saveFavourite;
 
-  /// No description provided for @removeFavourite.
-  ///
-  /// In en, this message translates to:
-  /// **'Remove favourite'**
-  String get removeFavourite;
-
-  /// No description provided for @signInRequired.
-  ///
-  /// In en, this message translates to:
-  /// **'Sign in to continue'**
-  String get signInRequired;
-
   /// No description provided for @openProfile.
   ///
   /// In en, this message translates to:
@@ -416,29 +392,11 @@ abstract class AppLocalizations {
   /// **'Get started'**
   String get getStarted;
 
-  /// No description provided for @skip.
-  ///
-  /// In en, this message translates to:
-  /// **'Skip'**
-  String get skip;
-
-  /// No description provided for @featured.
-  ///
-  /// In en, this message translates to:
-  /// **'Featured meals'**
-  String get featured;
-
   /// No description provided for @mealUnavailable.
   ///
   /// In en, this message translates to:
   /// **'No meals available'**
   String get mealUnavailable;
-
-  /// No description provided for @tryAgain.
-  ///
-  /// In en, this message translates to:
-  /// **'Please try again'**
-  String get tryAgain;
 
   /// No description provided for @authInvalid.
   ///
@@ -482,23 +440,11 @@ abstract class AppLocalizations {
   /// **'Create your account'**
   String get createYourAccount;
 
-  /// No description provided for @continueLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Continue'**
-  String get continueLabel;
-
   /// No description provided for @priceUnit.
   ///
   /// In en, this message translates to:
   /// **'EGP'**
   String get priceUnit;
-
-  /// No description provided for @offlineNotice.
-  ///
-  /// In en, this message translates to:
-  /// **'Showing saved meals'**
-  String get offlineNotice;
 }
 
 class _AppLocalizationsDelegate

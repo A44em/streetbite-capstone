@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../domain/entities/app_user.dart';
 import '../../domain/entities/meal.dart';
 
 /// Singleton: one shared Firestore gateway for user-scoped persistence.
@@ -16,10 +17,11 @@ class FirestoreService {
   DocumentReference<Map<String, dynamic>> get _user =>
       _db.collection('users').doc(uid);
   Stream<DocumentSnapshot<Map<String, dynamic>>> profile() => _user.snapshots();
-  Future<void> saveProfile({required String name, required String email}) =>
-      _user.set({
-        'name': name,
-        'email': email,
+  Future<void> saveProfile(AppUser profile) => _user.set({
+        'id': profile.id,
+        'name': profile.name,
+        'email': profile.email,
+        if (profile.photoUrl != null) 'photoUrl': profile.photoUrl,
         'updatedAt': FieldValue.serverTimestamp()
       }, SetOptions(merge: true));
   Future<void> savePhotoUrl(String url) =>

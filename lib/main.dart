@@ -15,13 +15,10 @@ import 'presentation/blocs/theme_cubit.dart';
 import 'presentation/screens/auth_screen.dart';
 import 'presentation/screens/home_screen.dart';
 import 'presentation/screens/onboarding_screen.dart';
-import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
   await configureDependencies();
   runApp(const StreetBiteApp());
 }
@@ -31,8 +28,8 @@ class StreetBiteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
-          BlocProvider(create: (_) => ThemeCubit()),
-          BlocProvider(create: (_) => LocaleCubit()),
+          BlocProvider(create: (_) => ThemeCubit(sl<SharedPreferences>())),
+          BlocProvider(create: (_) => LocaleCubit(sl<SharedPreferences>())),
           BlocProvider(create: (_) => AuthCubit(FirebaseAuth.instance)),
           BlocProvider(create: (_) => CartBloc()),
           BlocProvider(create: (_) => MealCubit(sl<GetMeals>())..load()),

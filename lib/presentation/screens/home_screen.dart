@@ -6,6 +6,8 @@ import '../blocs/cart_bloc.dart';
 import '../blocs/locale_cubit.dart';
 import '../blocs/meal_cubit.dart';
 import '../blocs/theme_cubit.dart';
+import '../widgets/meal_card.dart';
+import '../widgets/meal_image.dart';
 import 'cart_screen.dart';
 import 'meal_details_screen.dart';
 import 'profile_screen.dart';
@@ -45,15 +47,19 @@ class HomeScreen extends StatelessWidget {
             onPressed: () => context.read<ThemeCubit>().toggle(),
             icon: const Icon(Icons.brightness_6),
           ),
-          IconButton(
-            tooltip: localizations.cart,
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const CartScreen()),
-            ),
-            icon: Badge(
-              label: Text('${context.watch<CartBloc>().state.length}'),
-              child: const Icon(Icons.shopping_cart),
+          Semantics(
+            identifier: 'open_cart',
+            button: true,
+            child: IconButton(
+              tooltip: localizations.cart,
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const CartScreen()),
+              ),
+              icon: Badge(
+                label: Text('${context.watch<CartBloc>().state.length}'),
+                child: const Icon(Icons.shopping_cart),
+              ),
             ),
           ),
         ],
@@ -94,12 +100,7 @@ class HomeScreen extends StatelessWidget {
                     children: meals
                         .take(3)
                         .map(
-                          (meal) => Image.network(
-                            meal.image,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                const Icon(Icons.restaurant),
-                          ),
+                          (meal) => MealImage(url: meal.image),
                         )
                         .toList(),
                   ),
@@ -126,72 +127,39 @@ class HomeScreen extends StatelessWidget {
                         .toList(),
                   ),
                 ),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.all(12),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: constraints.maxWidth > 700 ? 4 : 2,
-                    childAspectRatio: .67,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                  ),
-                  itemCount: meals.length,
-                  itemBuilder: (context, index) {
-                    final meal = meals[index];
-                    return Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: InkWell(
-                        onTap: () => Navigator.push(
+                Semantics(
+                  identifier: 'meal_grid',
+                  child: GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.all(12),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: constraints.maxWidth > 700 ? 4 : 2,
+                      childAspectRatio: .67,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
+                    itemCount: meals.length,
+                    itemBuilder: (context, index) {
+                      final meal = meals[index];
+                      return MealCard(
+                        meal: meal,
+                        addLabel: localizations.addToCart,
+                        onOpen: () => Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (_) => MealDetailsScreen(meal: meal),
                           ),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Expanded(
-                              child: Image.network(
-                                meal.image,
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) =>
-                                    const Icon(Icons.fastfood),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(
-                                meal.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
-                              child: Text(meal.category, maxLines: 1),
-                            ),
-                            TextButton.icon(
-                              onPressed: () {
-                                context.read<CartBloc>().add(
-                                      CartItemAdded(meal),
-                                    );
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(localizations.addToCart),
-                                  ),
-                                );
-                              },
-                              icon: const Icon(Icons.add),
-                              label: Text(localizations.addToCart),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
+                        onAdd: () {
+                          context.read<CartBloc>().add(CartItemAdded(meal));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(localizations.addedToCart)),
+                          );
+                        },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),

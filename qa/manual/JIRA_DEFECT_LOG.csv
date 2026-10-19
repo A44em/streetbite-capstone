@@ -1,0 +1,4 @@
+Local Defect ID,Jira Key,Summary,Severity,Environment,Steps,Expected,Actual,Status,Evidence
+LOCAL-001,,Universal debug APK cannot install on current AVD,High,Android 36.1 emulator,Install app-debug.apk with adb,APK installs successfully,Package installer reports insufficient internal storage,Open,Prior ADB output
+LOCAL-002,,AVD package manager becomes unresponsive during ARM64 install,High,Android 36.1 emulator,Cold boot AVD then install ARM64 split APK,Package manager completes install,ADB install and package query stall,Open,Prior bounded ADB output
+LOCAL-003,,Android command-line tools missing,Medium,macOS Flutter environment,Run flutter doctor -v,Android toolchain is fully configured,cmdline-tools missing and overall license status unknown,Open,flutter doctor output

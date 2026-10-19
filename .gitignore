@@ -37,3 +37,9 @@ firebase.json
 **/doc/api/
 **/ios/Flutter/.last_build_id
 coverage/
+
+# Appium/Maven generated output
+qa/appium/target/
+qa/appium/.classpath
+qa/appium/.project
+qa/appium/.settings/

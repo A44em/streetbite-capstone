@@ -1,5 +1,7 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../data/models/user_model.dart';
 import '../../domain/entities/app_user.dart';
 import '../../domain/entities/meal.dart';
 
@@ -14,9 +16,48 @@ class FirestoreService {
     return user.uid;
   }
 
+  /// Largest avatar accepted; mirrored by the `avatar` rule in firestore.rules.
+  static const maxAvatarBytes = 500 * 1024;
+
   DocumentReference<Map<String, dynamic>> get _user =>
       _db.collection('users').doc(uid);
-  Stream<DocumentSnapshot<Map<String, dynamic>>> profile() => _user.snapshots();
+  DocumentReference<Map<String, dynamic>> get _avatar =>
+      _user.collection('avatar').doc('current');
+
+  /// The signed-in user's profile, built and validated by [UserModelBuilder].
+  /// Emits null when the stored data cannot form a valid profile.
+  Stream<UserModel?> userProfile() {
+    final user = FirebaseAuth.instance.currentUser!;
+    return _user.snapshots().map((snapshot) {
+      try {
+        return UserModelBuilder.fromFirestore(
+          snapshot.data() ?? const {},
+          uid: user.uid,
+          fallbackName: user.displayName,
+          fallbackEmail: user.email,
+        ).build();
+      } on StateError {
+        return null;
+      }
+    });
+  }
+
+  /// Profile photo stored as JPEG bytes in Firestore (no Cloud Storage).
+  Stream<Uint8List?> avatar() =>
+      _avatar.snapshots().map((s) => (s.data()?['image'] as Blob?)?.bytes);
+
+  Future<void> saveAvatar(Uint8List jpeg) {
+    if (jpeg.isEmpty || jpeg.length > maxAvatarBytes) {
+      throw ArgumentError(
+          'Avatar must be between 1 byte and $maxAvatarBytes bytes.');
+    }
+    return _avatar.set({
+      'image': Blob(jpeg),
+      'contentType': 'image/jpeg',
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
   Future<void> saveProfile(AppUser profile) => _user.set({
         'id': profile.id,
         'name': profile.name,
@@ -24,8 +65,6 @@ class FirestoreService {
         if (profile.photoUrl != null) 'photoUrl': profile.photoUrl,
         'updatedAt': FieldValue.serverTimestamp()
       }, SetOptions(merge: true));
-  Future<void> savePhotoUrl(String url) =>
-      _user.set({'photoUrl': url}, SetOptions(merge: true));
   Stream<QuerySnapshot<Map<String, dynamic>>> favourites() =>
       _user.collection('favourites').snapshots();
   Future<void> toggleFavourite(Meal meal) async {

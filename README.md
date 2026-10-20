@@ -45,7 +45,8 @@ Firebase configuration is maintained locally and excluded from version control:
 - `firebase.json`
 
 The Firebase project requires Email/Password Authentication, Cloud Firestore,
-and Firebase Storage. Firestore and Storage rules should restrict data to the
+and Cloud Firestore (the profile photo is stored in Firestore; Cloud Storage is not used).
+Firestore rules should restrict data to the
 authenticated owner.
 
 The Google Maps key is supplied through the ignored
@@ -93,13 +94,13 @@ Public repository: https://github.com/A44em/streetbite-capstone
 Final verification 2026-10-20 (details in `submission/FINAL_SUBMISSION_READINESS.md`):
 
 - `dart format` check: 0 changes; `flutter analyze`: no issues
-- Automated tests: 6/6 passing
-- Firebase rules: 19/19 Emulator Suite tests; live cross-user check 11/11;
+- Automated tests: 10/10 passing
+- Firebase rules: 20/20 Emulator Suite tests; live cross-user check 11/11;
   Firestore rules deployed (see `docs/FIREBASE_SECURITY_AND_DEPLOYMENT.md`)
 - Release APK: production-signed with the StreetBite upload key, installed and smoke-tested
-- Appium (5 scenarios) on the signed release APK: 5 pass, 0 fail, 0 skipped
-- Manual QA (25 cases): 23 pass, 0 fail, 2 blocked (Firebase Storage not enabled;
-  no Google Maps key), both owner-side configuration
+- Appium (5 scenarios) on the final signed APK: 5 pass, 0 fail, 0 skipped (emulator)
+- Manual QA (25 cases): 23 pass, 0 fail, 2 blocked (profile photo awaits deployment of the
+  new Firestore avatar rule; vendor map is a bonus needing a Maps key)
 - Firebase App Distribution: release 1.0.0 (1) uploaded; no testers invited yet
 - Physical-device validation: not performed (emulator-simulated biometrics)
 

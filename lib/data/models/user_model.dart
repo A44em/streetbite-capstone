@@ -48,6 +48,28 @@ class UserModelBuilder {
     return this;
   }
 
+  /// Pre-fills the builder from a stored Firestore profile, falling back to
+  /// Firebase Authentication values for fields the document does not contain.
+  /// [build] still validates the result, so the profile screen only ever
+  /// renders a well-formed [UserModel].
+  static UserModelBuilder fromFirestore(
+    Map<String, dynamic> data, {
+    required String uid,
+    String? fallbackName,
+    String? fallbackEmail,
+  }) {
+    String? text(Object? value) {
+      final s = value?.toString().trim();
+      return s == null || s.isEmpty ? null : s;
+    }
+
+    return UserModelBuilder()
+        .withId(uid)
+        .withName(text(data['name']) ?? fallbackName ?? '')
+        .withEmail(text(data['email']) ?? fallbackEmail ?? '')
+        .withPhotoUrl(text(data['photoUrl']));
+  }
+
   UserModelBuilder withPhotoUrl(String? value) {
     _photoUrl = value?.trim();
     return this;

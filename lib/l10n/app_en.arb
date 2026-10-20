@@ -57,5 +57,6 @@
   "emptyCartNotice": "Cart is now empty",
   "welcomeBack": "Welcome back",
   "createYourAccount": "Create your account",
-  "priceUnit": "EGP"
+  "priceUnit": "EGP",
+  "photoTooLarge": "Photo is too large. Choose a smaller image."
 }

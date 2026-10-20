@@ -1,5 +1,5 @@
-// Security-rule tests for firestore.rules and storage.rules.
-// Payloads mirror lib/core/services/firestore_service.dart and profile_screen.dart.
+// Security-rule tests for firestore.rules (Emulator Suite).
+// Payloads mirror lib/core/services/firestore_service.dart.
 import { after, before, beforeEach, describe, test } from 'node:test';
 import { readFileSync } from 'node:fs';
 import {
@@ -8,9 +8,8 @@ import {
   initializeTestEnvironment,
 } from '@firebase/rules-unit-testing';
 import {
-  addDoc, collection, deleteDoc, doc, getDoc, serverTimestamp, setDoc, updateDoc,
+  Bytes, addDoc, collection, deleteDoc, doc, getDoc, serverTimestamp, setDoc, updateDoc,
 } from 'firebase/firestore';
-import { getBytes, ref, uploadBytes } from 'firebase/storage';
 
 const ALICE = { uid: 'alice', email: 'alice@example.com' };
 const BOB = { uid: 'bob', email: 'bob@example.com' };
@@ -23,18 +22,18 @@ const order = {
   total: 120, paymentMethod: 'cash', status: 'placed', createdAt: serverTimestamp(),
 };
 const db = (u) => (u ? env.authenticatedContext(u.uid, { email: u.email }) : env.unauthenticatedContext()).firestore();
-const st = (u) => (u ? env.authenticatedContext(u.uid, { email: u.email }) : env.unauthenticatedContext()).storage();
-const jpeg = (n) => new Uint8Array(n);
+const avatar = (n, extra = {}) => ({
+  image: Bytes.fromUint8Array(new Uint8Array(n)), contentType: 'image/jpeg', updatedAt: serverTimestamp(), ...extra,
+});
 
 before(async () => {
   env = await initializeTestEnvironment({
     projectId: 'demo-streetbite',
     firestore: { rules: readFileSync('../../firestore.rules', 'utf8'), host: '127.0.0.1', port: 8080 },
-    storage: { rules: readFileSync('../../storage.rules', 'utf8'), host: '127.0.0.1', port: 9199 },
   });
 });
 after(async () => env?.cleanup());
-beforeEach(async () => { await env.clearFirestore(); await env.clearStorage(); });
+beforeEach(async () => { await env.clearFirestore(); });
 
 describe('users/{uid} profile', () => {
   test('owner can create own profile (app saveProfile, merge)', async () => {
@@ -110,23 +109,32 @@ describe('orders', () => {
   });
 });
 
-describe('storage profiles/{uid}', () => {
-  const meta = { contentType: 'image/jpeg' };
-  test('owner can upload and read own avatar (<5 MB JPEG)', async () => {
-    await assertSucceeds(uploadBytes(ref(st(ALICE), 'profiles/alice/avatar.jpg'), jpeg(1024), meta));
-    await assertSucceeds(getBytes(ref(st(ALICE), 'profiles/alice/avatar.jpg')));
+describe('avatar (profile photo in Firestore)', () => {
+  const path = 'users/alice/avatar/current';
+  test('owner can upload, replace, read and delete own avatar (saveAvatar)', async () => {
+    await assertSucceeds(setDoc(doc(db(ALICE), path), avatar(60 * 1024)));
+    await assertSucceeds(setDoc(doc(db(ALICE), path), avatar(1024)));
+    await assertSucceeds(getDoc(doc(db(ALICE), path)));
+    await assertSucceeds(deleteDoc(doc(db(ALICE), path)));
   });
-  test('non-image and oversized uploads rejected', async () => {
-    await assertFails(uploadBytes(ref(st(ALICE), 'profiles/alice/a.txt'), jpeg(10), { contentType: 'text/plain' }));
-    await assertFails(uploadBytes(ref(st(ALICE), 'profiles/alice/big.jpg'), jpeg(5 * 1024 * 1024 + 1), meta));
+  test('accepts exactly 500 KB, rejects larger or empty images', async () => {
+    await assertSucceeds(setDoc(doc(db(ALICE), path), avatar(500 * 1024)));
+    await assertFails(setDoc(doc(db(ALICE), path), avatar(500 * 1024 + 1)));
+    await assertFails(setDoc(doc(db(ALICE), path), avatar(0)));
   });
-  test('other user and unauthenticated cannot read or write', async () => {
-    await env.withSecurityRulesDisabled((c) => uploadBytes(ref(c.storage(), 'profiles/alice/avatar.jpg'), jpeg(10), meta));
-    await assertFails(getBytes(ref(st(BOB), 'profiles/alice/avatar.jpg')));
-    await assertFails(uploadBytes(ref(st(BOB), 'profiles/alice/avatar.jpg'), jpeg(10), meta));
-    await assertFails(getBytes(ref(st(null), 'profiles/alice/avatar.jpg')));
+  test('rejects non-image content type, non-bytes data and extra fields', async () => {
+    await assertFails(setDoc(doc(db(ALICE), path), avatar(10, { contentType: 'text/html' })));
+    await assertFails(setDoc(doc(db(ALICE), path), { ...avatar(10), image: 'data:image/jpeg;base64,AAAA' }));
+    await assertFails(setDoc(doc(db(ALICE), path), avatar(10, { owner: 'bob' })));
   });
-  test('paths outside profiles/ are denied', async () => {
-    await assertFails(uploadBytes(ref(st(ALICE), 'public/x.jpg'), jpeg(10), meta));
+  test('only the single current avatar document is allowed', async () => {
+    await assertFails(setDoc(doc(db(ALICE), 'users/alice/avatar/other'), avatar(10)));
+  });
+  test('other user and unauthenticated cannot read, write or delete', async () => {
+    await env.withSecurityRulesDisabled((c) => setDoc(doc(c.firestore(), path), avatar(10)));
+    await assertFails(getDoc(doc(db(BOB), path)));
+    await assertFails(setDoc(doc(db(BOB), path), avatar(10)));
+    await assertFails(deleteDoc(doc(db(BOB), path)));
+    await assertFails(getDoc(doc(db(null), path)));
   });
 });

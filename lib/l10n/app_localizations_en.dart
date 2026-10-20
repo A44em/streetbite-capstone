@@ -181,4 +181,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get priceUnit => 'EGP';
+
+  @override
+  String get photoTooLarge => 'Photo is too large. Choose a smaller image.';
 }

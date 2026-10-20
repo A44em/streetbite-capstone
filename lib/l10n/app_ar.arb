@@ -57,5 +57,6 @@
   "emptyCartNotice": "السلة فارغة الآن",
   "welcomeBack": "أهلاً بعودتك",
   "createYourAccount": "أنشئ حسابك",
-  "priceUnit": "جنيه"
+  "priceUnit": "جنيه",
+  "photoTooLarge": "الصورة كبيرة جدًا. اختر صورة أصغر."
 }

@@ -2,9 +2,9 @@
   "name": "streetbite-firebase-rules-tests",
   "private": true,
   "type": "module",
-  "description": "Firestore and Storage security-rule tests for StreetBite, run against the Firebase Emulator Suite.",
+  "description": "Firestore security-rule tests for StreetBite, run against the Firebase Emulator Suite.",
   "scripts": {
-    "test": "firebase emulators:exec --config ../../firebase.deploy.json --only firestore,storage --project demo-streetbite \"node --test rules.test.mjs\""
+    "test": "firebase emulators:exec --config ../../firebase.deploy.json --only firestore --project demo-streetbite \"node --test rules.test.mjs\""
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "4.0.1",

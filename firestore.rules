@@ -15,6 +15,18 @@ service cloud.firestore {
         && request.resource.data.id == userId;
       allow delete: if false;
 
+      // Profile photo stored in Firestore as JPEG/PNG bytes (max 500 KB).
+      match /avatar/{docId} {
+        allow read, delete: if ownsUserDocument(userId);
+        allow create, update: if ownsUserDocument(userId)
+          && docId == 'current'
+          && request.resource.data.keys().hasOnly(['image', 'contentType', 'updatedAt'])
+          && request.resource.data.image is bytes
+          && request.resource.data.image.size() > 0
+          && request.resource.data.image.size() <= 500 * 1024
+          && request.resource.data.contentType in ['image/jpeg', 'image/png'];
+      }
+
       match /favourites/{mealId} {
         allow read, delete: if ownsUserDocument(userId);
         allow create, update: if ownsUserDocument(userId)

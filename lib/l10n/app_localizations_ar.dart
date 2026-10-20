@@ -181,4 +181,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get priceUnit => 'جنيه';
+
+  @override
+  String get photoTooLarge => 'الصورة كبيرة جدًا. اختر صورة أصغر.';
 }

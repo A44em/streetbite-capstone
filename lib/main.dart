@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -17,6 +19,11 @@ import 'presentation/screens/auth_gate.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  // QA-only switch (debug builds): validate unreleased firestore.rules against
+  // the local Emulator Suite. Has no effect unless explicitly defined.
+  if (kDebugMode && const bool.fromEnvironment('USE_FIRESTORE_EMULATOR')) {
+    FirebaseFirestore.instance.useFirestoreEmulator('10.0.2.2', 8080);
+  }
   await configureDependencies();
   runApp(const StreetBiteApp());
 }

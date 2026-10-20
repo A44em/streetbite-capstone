@@ -1,11 +1,12 @@
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:local_auth/local_auth.dart';
 import '../../core/services/firestore_service.dart';
+import '../../data/models/user_model.dart';
 import '../../l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -36,18 +37,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> changePhoto() async {
+    // Downscale and re-encode on device so the JPEG fits in a Firestore field.
     final picked = await ImagePicker().pickImage(
-        source: ImageSource.gallery, imageQuality: 65, maxWidth: 900);
+        source: ImageSource.gallery,
+        imageQuality: 70,
+        maxWidth: 512,
+        maxHeight: 512);
     if (picked == null) {
+      return;
+    }
+    final bytes = await picked.readAsBytes();
+    if (bytes.length > FirestoreService.maxAvatarBytes) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(AppLocalizations.of(context)!.photoTooLarge)));
+      }
       return;
     }
     setState(() => uploading = true);
     try {
-      final ref = FirebaseStorage.instance
-          .ref('profiles/${FirebaseAuth.instance.currentUser!.uid}/avatar.jpg');
-      await ref.putData(await picked.readAsBytes(),
-          SettableMetadata(contentType: 'image/jpeg'));
-      await FirestoreService.instance.savePhotoUrl(await ref.getDownloadURL());
+      await FirestoreService.instance.saveAvatar(bytes);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(AppLocalizations.of(context)!.photoUpdated),
@@ -69,27 +78,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = FirebaseAuth.instance.currentUser!;
     return Scaffold(
         appBar: AppBar(title: Text(l.profile)),
-        body: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-            stream: FirestoreService.instance.profile(),
+        body: StreamBuilder<UserModel?>(
+            stream: FirestoreService.instance.userProfile(),
             builder: (context, snapshot) {
-              final data = snapshot.data?.data() ?? {};
-              final url = data['photoUrl'] as String?;
+              final profile = snapshot.data;
               return ListView(padding: const EdgeInsets.all(20), children: [
                 Center(
-                    child: CircleAvatar(
-                        radius: 46,
-                        backgroundImage: url == null ? null : NetworkImage(url),
-                        child: url == null
-                            ? const Icon(Icons.person, size: 44)
-                            : null)),
+                    child: StreamBuilder<Uint8List?>(
+                        stream: FirestoreService.instance.avatar(),
+                        builder: (context, avatar) {
+                          final image = avatar.data;
+                          return CircleAvatar(
+                              key: const ValueKey('profile_avatar'),
+                              radius: 46,
+                              backgroundImage:
+                                  image == null ? null : MemoryImage(image),
+                              child: image == null
+                                  ? const Icon(Icons.person, size: 44)
+                                  : null);
+                        })),
                 Center(
                     child: TextButton.icon(
                         onPressed: uploading ? null : changePhoto,
                         icon: const Icon(Icons.photo_library_outlined),
                         label: Text(l.profile))),
-                Text((data['name'] ?? user.displayName ?? '').toString(),
+                Text(profile?.name ?? user.displayName ?? '',
                     style: Theme.of(context).textTheme.headlineSmall),
-                Text(user.email ?? ''),
+                Text(profile?.email ?? user.email ?? ''),
                 const Divider(),
                 Text(l.device, style: Theme.of(context).textTheme.titleMedium),
                 Text(device),

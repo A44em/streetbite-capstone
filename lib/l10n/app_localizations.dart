@@ -445,6 +445,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'EGP'**
   String get priceUnit;
+
+  /// No description provided for @photoTooLarge.
+  ///
+  /// In en, this message translates to:
+  /// **'Photo is too large. Choose a smaller image.'**
+  String get photoTooLarge;
 }
 
 class _AppLocalizationsDelegate

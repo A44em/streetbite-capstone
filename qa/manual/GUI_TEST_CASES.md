@@ -15,5 +15,6 @@ The canonical steps and result fields are maintained in `TEST_CASES.md`.
 | TC_THEME_001 | Contrast, surfaces, controls, images in both themes |
 | TC_RESPONSIVE_001 | Phone/tablet breakpoints and overflow |
 
-GUI execution is currently `Not Run`; no visual result is inferred from source
-inspection alone.
+Executed 2026-10-20 on the API 36 emulator (phone 1080×2400, emulated tablet 1600×2560): all
+GUI cases Pass except TC_MAP_001 (Blocked, no Maps key) and TC_PROFILE_003 (Blocked live; photo
+upload verified on the Emulator Suite). Evidence is linked per case in `TEST_CASES.md`.

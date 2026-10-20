@@ -12,4 +12,6 @@ execution they are supplemented by the following checks:
 - Battery/network usage observation during meal loading and map use
 - Android 10 or later plus the project target SDK
 
-These checks are `Not Run` until device evidence is recorded.
+Executed 2026-10-20 on the emulator: TC_RESPONSIVE_001 and TC_LIFECYCLE_001 Pass (two screen
+profiles, rotation, background/resume, process kill, offline/restored connectivity, signed-release
+install). Not covered: physical-device runs, text-scale variations and battery measurement.

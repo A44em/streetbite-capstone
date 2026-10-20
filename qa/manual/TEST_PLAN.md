@@ -15,7 +15,7 @@ profile image, order history, theme switching, and English/Arabic localization.
 
 - Functional and GUI testing
 - Positive and negative validation
-- Integration testing for Firebase, TheMealDB, Maps, Storage, and Firestore
+- Integration testing for Firebase Auth, Cloud Firestore (including the profile photo), TheMealDB and Maps
 - Offline/cache and interrupted-network testing
 - Localization, RTL, accessibility, and responsive-layout testing
 - Installation, upgrade, lifecycle, permission, and mobile compatibility testing
@@ -24,10 +24,10 @@ profile image, order history, theme switching, and English/Arabic localization.
 
 | Environment | Target | Status |
 |---|---|---|
-| Emulator A | Android 36.1, 1080×2400 | Available but package manager became unresponsive |
-| Emulator B | Smaller phone profile | Not configured |
-| Physical Android | Android 10+ with biometrics | Not available |
-| Backend | Firebase project for `com.a44em.streetbite` | Locally configured; rule deployment unverified |
+| Emulator A | `StreetBite_API_36`, Android 16 / API 36, 1080×2400 | Used for all execution (2026-10-20) |
+| Emulator B | Same AVD with `wm size 1600x2560`, 320 dpi (tablet profile) | Used for TC_RESPONSIVE_001 |
+| Physical Android | Android 10+ with biometrics | Not available: physical-device runs not performed |
+| Backend | Firebase project `streetbite-f0a77` | Firestore rules deployed and verified 2026-10-20; avatar rule pending deploy |
 
 ## Entry Criteria
 

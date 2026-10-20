@@ -18,7 +18,13 @@ abstract class BasePage {
   }
 
   protected WebElement byIdentifier(String identifier) {
-    return wait.until(ExpectedConditions.presenceOfElementLocated(AppiumBy.id(identifier)));
+    return wait.until(ExpectedConditions.presenceOfElementLocated(identifier(identifier)));
+  }
+
+  protected By identifier(String value) {
+    // Flutter exposes Semantics.identifier as a literal Android resource-id
+    // without the package:id/ prefix that Appium's id strategy assumes.
+    return AppiumBy.xpath("//*[@resource-id='" + value + "']");
   }
 
   protected boolean isPresent(By locator, Duration timeout) {

@@ -28,6 +28,14 @@ public final class HomePage extends BasePage {
     wait.until(ExpectedConditions.elementToBeClickable(FIRST_ADD_BUTTON)).click();
   }
 
+  public void openCart() {
+    byIdentifier("open_cart").click();
+  }
+
+  public boolean showsEmptyCart() {
+    return isPresent(AppiumBy.xpath("//*[@text='Your cart is empty']"), Duration.ofSeconds(8));
+  }
+
   public boolean showsAddedFeedback() {
     return isPresent(AppiumBy.xpath("//*[@text='Added to cart']"), Duration.ofSeconds(8));
   }

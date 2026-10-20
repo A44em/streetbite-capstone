@@ -22,17 +22,19 @@ public final class AuthenticationTest extends BaseTest {
   }
 
   @Test
-  public void invalidLoginCredentials() {
+  public void invalidLoginCredentials() throws Exception {
     LoginPage login = new LoginPage(driver).open();
     login.enterEmail("invalid@example.com").enterPassword("wrong-password").submit();
-    Assert.assertTrue(login.showsText("Invalid email or password"));
+    Assert.assertTrue(login.showsAuthenticationError());
+    saveScreenshot("invalid-login-pass");
   }
 
   @Test
-  public void emptyLoginFields() {
+  public void emptyLoginFields() throws Exception {
     LoginPage login = new LoginPage(driver).open();
     login.submit();
     Assert.assertTrue(login.showsText("Please check your input"));
     Assert.assertTrue(login.showsText("Password must be at least 6 characters"));
+    saveScreenshot("empty-login-pass");
   }
 }

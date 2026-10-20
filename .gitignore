@@ -43,3 +43,8 @@ qa/appium/target/
 qa/appium/.classpath
 qa/appium/.project
 qa/appium/.settings/
+
+# Submission binaries (distributed separately, not versioned)
+submission/*.apk
+submission/*.zip
+submission/SHA256SUMS.txt

@@ -32,6 +32,10 @@ public abstract class BaseTest {
         .setNoReset(false)
         .setAutoGrantPermissions(true)
         .setNewCommandTimeout(Duration.ofSeconds(120));
+    options.setCapability("appium:adbExecTimeout", 120000);
+    options.setCapability("appium:androidInstallTimeout", 180000);
+    options.setCapability("appium:uiautomator2ServerInstallTimeout", 120000);
+    options.setCapability("appium:uiautomator2ServerLaunchTimeout", 120000);
     String udid = System.getenv("ANDROID_UDID");
     if (udid != null && !udid.isBlank()) {
       options.setUdid(udid);
@@ -50,6 +54,7 @@ public abstract class BaseTest {
     }
     if (!result.isSuccess()) {
       saveScreenshot(result.getMethod().getMethodName());
+      savePageSource(result.getMethod().getMethodName());
     }
     driver.quit();
   }
@@ -59,6 +64,12 @@ public abstract class BaseTest {
     Path target = Path.of("target", "screenshots", name + ".png");
     Files.createDirectories(target.getParent());
     Files.copy(source.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
+  }
+
+  protected void savePageSource(String name) throws Exception {
+    Path target = Path.of("target", "page-source", name + ".xml");
+    Files.createDirectories(target.getParent());
+    Files.writeString(target, driver.getPageSource());
   }
 
   protected static String environment(String name, String fallback) {

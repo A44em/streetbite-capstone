@@ -90,12 +90,15 @@ Public repository: https://github.com/A44em/streetbite-capstone
 
 ## Verification Status
 
-- Static analysis: no issues
-- Automated tests: 6 passing
-- Android debug build: successful
-- Emulator installation: pending due to insufficient storage and emulator
-  responsiveness in the latest verification environment
-- Physical-device validation: pending
+Final verification 2026-10-20 (details in `submission/FINAL_SUBMISSION_READINESS.md`):
+
+- `dart format` check: 0 changes; `flutter analyze`: no issues
+- Automated tests: 6/6 passing
+- Android debug build: successful; installed and launched on an API 36 emulator
+- Appium (5 scenarios): 2 pass, 0 fail, 3 skipped (no authorized test account)
+- Manual QA (25 cases): 4 pass, 0 fail, 21 blocked (authentication/hardware)
+- Release-mode APK: builds, but debug-key signed (no production keystore)
+- Physical-device validation and Firebase App Distribution: not performed
 
 ## Demo Pricing
 

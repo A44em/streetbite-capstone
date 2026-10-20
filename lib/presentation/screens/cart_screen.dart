@@ -25,8 +25,11 @@ class _CartScreenState extends State<CartScreen> {
     }
     setState(() => busy = true);
     try {
+      // Firestore only completes a write after server acknowledgement, which
+      // never arrives offline; bound the wait so the user gets feedback.
       await FirestoreService.instance
-          .placeOrder(cart.state, paymentMethod: payment.code);
+          .placeOrder(cart.state, paymentMethod: payment.code)
+          .timeout(const Duration(seconds: 15));
       if (!mounted) {
         return;
       }

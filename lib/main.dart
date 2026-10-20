@@ -12,9 +12,7 @@ import 'presentation/blocs/cart_bloc.dart';
 import 'presentation/blocs/locale_cubit.dart';
 import 'presentation/blocs/meal_cubit.dart';
 import 'presentation/blocs/theme_cubit.dart';
-import 'presentation/screens/auth_screen.dart';
-import 'presentation/screens/home_screen.dart';
-import 'presentation/screens/onboarding_screen.dart';
+import 'presentation/screens/auth_gate.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,32 +53,7 @@ class StreetBiteApp extends StatelessWidget {
                       brightness: Brightness.dark,
                       useMaterial3: true),
                   themeMode: context.watch<ThemeCubit>().state,
-                  home: StreamBuilder<User?>(
-                    stream: FirebaseAuth.instance.authStateChanges(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Scaffold(
-                            body: Center(child: CircularProgressIndicator()));
-                      }
-                      if (snapshot.data != null) {
-                        return const HomeScreen();
-                      }
-                      return FutureBuilder<SharedPreferences>(
-                        future: SharedPreferences.getInstance(),
-                        builder: (context, prefs) {
-                          if (!prefs.hasData) {
-                            return const Scaffold(
-                                body:
-                                    Center(child: CircularProgressIndicator()));
-                          }
-                          return prefs.data!.getBool('onboarding_seen_v1') ==
-                                  true
-                              ? const AuthScreen()
-                              : const OnboardingScreen();
-                        },
-                      );
-                    },
-                  ),
+                  home: const AuthGate(),
                 )),
       );
 }

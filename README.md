@@ -95,8 +95,9 @@ Final verification 2026-10-20 (details in `submission/FINAL_SUBMISSION_READINESS
 - `dart format` check: 0 changes; `flutter analyze`: no issues
 - Automated tests: 6/6 passing
 - Android debug build: successful; installed and launched on an API 36 emulator
-- Appium (5 scenarios): 2 pass, 0 fail, 3 skipped (no authorized test account)
-- Manual QA (25 cases): 4 pass, 0 fail, 21 blocked (authentication/hardware)
+- Appium (5 scenarios): 5 pass, 0 fail, 0 skipped (disposable test account)
+- Manual QA (25 cases): 17 pass, 5 fail, 3 blocked — all 5 fails trace to Firebase
+  backend configuration (deployed Firestore rules, Storage bucket), not app code
 - Release-mode APK: builds, but debug-key signed (no production keystore)
 - Physical-device validation and Firebase App Distribution: not performed
 

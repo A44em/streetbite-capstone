@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../l10n/app_localizations.dart';
-import 'auth_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
-  const OnboardingScreen({super.key});
+  const OnboardingScreen({super.key, required this.onContinue});
+  static const seenKey = 'onboarding_seen_v1';
+
+  /// Called once onboarding is persisted; the parent gate shows authentication.
+  final VoidCallback onContinue;
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
@@ -22,10 +25,9 @@ class _OnboardingScreenState extends State<OnboardingScreen>
 
   Future<void> continueToAuth() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_seen_v1', true);
+    await prefs.setBool(OnboardingScreen.seenKey, true);
     if (!mounted) return;
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (_) => const AuthScreen()));
+    widget.onContinue();
   }
 
   @override

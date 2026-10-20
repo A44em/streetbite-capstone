@@ -75,34 +75,17 @@ flutter test
 flutter build apk --debug
 ```
 
-## Quality Engineering
+## Testing
 
-- `test/` contains Flutter unit tests for meals, cart behavior, the user Builder,
-  and preference persistence.
-- `qa/manual/` contains the manual test plan, canonical cases, execution record,
-  traceability, defect-import CSV, and closure report.
-- `qa/appium/` is an independent Java/Maven Appium 2 project using UiAutomator2,
-  page objects, explicit waits, and failure screenshots.
-- `docs/` records requirements coverage, gaps, verification, release blockers,
-  and the final submission checklist.
-- `evidence/` defines the required genuine screenshot and distribution artifacts.
+- `test/`: Flutter unit tests (meal model, cart, user Builder write/read paths,
+  locale/theme persistence). Run with `flutter test`.
+- `qa/appium/`: Java 17 / Maven / TestNG Appium 2 project (UiAutomator2, page objects,
+  explicit waits) with five scenarios. See `qa/appium/README.md`.
+- `qa/firebase-rules/`: Firestore security-rule tests for the Firebase Emulator Suite.
+- `qa/manual/`: test plan, 25 manual test cases, categorized suites, traceability matrix,
+  and a Jira-importable defect log.
 
 Public repository: https://github.com/A44em/streetbite-capstone
-
-## Verification Status
-
-Final verification 2026-10-20 (details in `submission/FINAL_SUBMISSION_READINESS.md`):
-
-- `dart format` check: 0 changes; `flutter analyze`: no issues
-- Automated tests: 10/10 passing
-- Firebase rules: 20/20 Emulator Suite tests; live cross-user check 11/11;
-  Firestore rules deployed (see `docs/FIREBASE_SECURITY_AND_DEPLOYMENT.md`)
-- Release APK: production-signed with the StreetBite upload key, installed and smoke-tested
-- Appium (5 scenarios) on the final signed APK: 5 pass, 0 fail, 0 skipped (emulator)
-- Manual QA (25 cases): 23 pass, 0 fail, 2 blocked (profile photo awaits deployment of the
-  new Firestore avatar rule; vendor map is a bonus needing a Maps key)
-- Firebase App Distribution: release 1.0.0 (1) uploaded; no testers invited yet
-- Physical-device validation: not performed (emulator-simulated biometrics)
 
 ### Building a release
 

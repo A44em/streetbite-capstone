@@ -41,6 +41,6 @@ same suite with `ANDROID_UDID` set to the connected device serial.
 ## Verification Status
 
 Executed 2026-10-20 on the `StreetBite_API_36` emulator: run 8 against the final production-signed
-APK (`386c095e…7996`) gave 5 passed, 0 failed, 0 skipped (TestNG reports archived under
-`evidence/runtime/appium/closure-2026-10-20/run8-final-apk-5of5/`). Physical-device execution has
+APK (`386c095e…7996`) gave 5 passed, 0 failed, 0 skipped. The TestNG/Surefire reports are delivered in
+the submission package (`04_Appium_Automation/Test_Reports/`), not in this repository. Physical-device execution has
 not been performed. Credentials come only from `STREETBITE_TEST_EMAIL` / `STREETBITE_TEST_PASSWORD`.

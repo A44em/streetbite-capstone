@@ -1,8 +1,8 @@
 # StreetBite Manual Test Cases
 
 Statuses are `Pass`, `Fail`, `Blocked`, or `Not Run`. `Not Run` is reserved for
-cases without an execution attempt. Evidence references remain blank until a
-real artifact is captured.
+cases without an execution attempt. Evidence files (screenshots, logs) are not stored in this
+repository; the `evidence/…` paths below refer to the evidence delivered with the submission package.
 
 | ID | Requirement | Preconditions | Test steps | Test data | Expected result | Actual result | Status | Evidence |
 |---|---|---|---|---|---|---|---|---|

@@ -48,3 +48,8 @@ qa/appium/.settings/
 submission/*.apk
 submission/*.zip
 submission/SHA256SUMS.txt
+
+# Rules-test dependencies
+qa/firebase-rules/node_modules
+firebase-debug.log
+firestore-debug.log

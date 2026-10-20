@@ -47,7 +47,9 @@ class _AuthScreenState extends State<AuthScreen> {
         final profile = UserModel.builder()
             .withId(user.uid)
             .withName(name.text)
-            .withEmail(email.text)
+            // Firebase normalises the account email (e.g. lowercase); the
+            // Firestore rule requires the profile email to match the token.
+            .withEmail(user.email ?? email.text)
             .build();
         await user.updateDisplayName(profile.name);
         await FirestoreService.instance.saveProfile(profile);

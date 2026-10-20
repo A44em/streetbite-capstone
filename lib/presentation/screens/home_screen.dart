@@ -79,9 +79,21 @@ class HomeScreen extends StatelessWidget {
           }
           if (state is MealFailure) {
             return Center(
-              child: ElevatedButton(
-                onPressed: () => context.read<MealCubit>().load(),
-                child: Text(localizations.retry),
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(Icons.cloud_off_rounded, size: 56),
+                    const SizedBox(height: 12),
+                    Text(localizations.error, textAlign: TextAlign.center),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => context.read<MealCubit>().load(),
+                      child: Text(localizations.retry),
+                    ),
+                  ],
+                ),
               ),
             );
           }

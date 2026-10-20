@@ -94,12 +94,24 @@ Final verification 2026-10-20 (details in `submission/FINAL_SUBMISSION_READINESS
 
 - `dart format` check: 0 changes; `flutter analyze`: no issues
 - Automated tests: 6/6 passing
-- Android debug build: successful; installed and launched on an API 36 emulator
-- Appium (5 scenarios): 5 pass, 0 fail, 0 skipped (disposable test account)
-- Manual QA (25 cases): 17 pass, 5 fail, 3 blocked — all 5 fails trace to Firebase
-  backend configuration (deployed Firestore rules, Storage bucket), not app code
-- Release-mode APK: builds, but debug-key signed (no production keystore)
-- Physical-device validation and Firebase App Distribution: not performed
+- Firebase rules: 19/19 Emulator Suite tests; live cross-user check 11/11;
+  Firestore rules deployed (see `docs/FIREBASE_SECURITY_AND_DEPLOYMENT.md`)
+- Release APK: production-signed with the StreetBite upload key, installed and smoke-tested
+- Appium (5 scenarios) on the signed release APK: 5 pass, 0 fail, 0 skipped
+- Manual QA (25 cases): 23 pass, 0 fail, 2 blocked (Firebase Storage not enabled;
+  no Google Maps key), both owner-side configuration
+- Firebase App Distribution: release 1.0.0 (1) uploaded; no testers invited yet
+- Physical-device validation: not performed (emulator-simulated biometrics)
+
+### Building a release
+
+Release builds use R8; the keep rules in `android/app/proguard-rules.pro` are required
+(without them the app crashes at startup). Production signing reads the git-ignored
+`android/key.properties` (format in `android/key.properties.example`).
+
+### Firebase rules tests
+
+See `qa/firebase-rules/README.md` (Emulator Suite, Java 21).
 
 ## Demo Pricing
 
